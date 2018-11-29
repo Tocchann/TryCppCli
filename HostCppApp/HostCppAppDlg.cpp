@@ -49,6 +49,9 @@ BOOL CHostCppAppDlg::OnInitDialog()
 
 	return TRUE;  // フォーカスをコントロールに設定した場合を除き、TRUE を返します。
 }
+#pragma comment(lib,"CppCliLib.lib")
+
+EXTERN_C void APIENTRY NativeExportFunc( HWND hwndOwner, LPCWSTR caption );
 
 void CHostCppAppDlg::OnOK()
 {
@@ -57,6 +60,9 @@ void CHostCppAppDlg::OnOK()
 	{
 		return;
 	}
+#if 1
+	NativeExportFunc( *this, theApp.m_pszAppName );
+#else
 	auto hDLL = LoadLibrary( L"CppCliLib.dll" );
 	if( hDLL != nullptr )
 	{
@@ -68,6 +74,6 @@ void CHostCppAppDlg::OnOK()
 		}
 		FreeLibrary( hDLL );
 	}
-	//NativeExportFunc( *this, theApp.m_pszAppName );
+#endif
 	//AfxMessageBox( _T( "--工事中--\nここでいきなりC++/CLIなDLLを呼び出してみようと思う。" ) );
 }
