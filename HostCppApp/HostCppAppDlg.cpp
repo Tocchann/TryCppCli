@@ -7,6 +7,9 @@
 #include "HostCppAppDlg.h"
 #include "afxdialogex.h"
 
+EXTERN_C void APIENTRY CppCliLibFunc( HWND hwndOwner, LPCWSTR caption );
+EXTERN_C void APIENTRY NativeCppLibFunc( HWND hwndOwner, LPCWSTR caption );
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -49,9 +52,6 @@ BOOL CHostCppAppDlg::OnInitDialog()
 
 	return TRUE;  // フォーカスをコントロールに設定した場合を除き、TRUE を返します。
 }
-#pragma comment(lib,"CppCliLib.lib")
-
-EXTERN_C void APIENTRY NativeExportFunc( HWND hwndOwner, LPCWSTR caption );
 
 void CHostCppAppDlg::OnOK()
 {
@@ -61,7 +61,8 @@ void CHostCppAppDlg::OnOK()
 		return;
 	}
 #if 1
-	NativeExportFunc( *this, theApp.m_pszAppName );
+	CppCliLibFunc( *this, theApp.m_pszAppName );
+	NativeCppLibFunc( *this, theApp.m_pszAppName );
 #else
 	auto hDLL = LoadLibrary( L"CppCliLib.dll" );
 	if( hDLL != nullptr )
